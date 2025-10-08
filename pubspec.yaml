@@ -58,13 +58,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/images/ghost.png
-    - assets/images/pumpkin.png
-    - assets/images/bat.png
-    - assets/images/correct_item.png
-    - assets/sounds/bg_loop.mp3
-    - assets/sounds/jumpscare.mp3
-    - assets/sounds/win_sound.mp3
+    - assets/images/
+    - assets/sounds
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

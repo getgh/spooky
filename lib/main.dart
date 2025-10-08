@@ -20,12 +20,7 @@ class HalloweenApp extends StatelessWidget {
       title: 'Halloween Storybook',
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        '/': (_) => HomePage(),
-        '/story': (_) => StoryPage(),
-        '/win': (_) => WinPage(),
-      },
+      home: HomePage(),
     );
   }
 }
@@ -57,7 +52,9 @@ class HomePage extends StatelessWidget {
               ElevatedButton.icon(
                 icon: Icon(Icons.play_arrow),
                 label: Text('Start the Hunt'),
-                onPressed: () => Navigator.of(context).pushNamed('/story'),
+                onPressed: () => Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (_) => StoryPage())),
               ),
             ],
           ),
@@ -91,7 +88,7 @@ class _StoryPageState extends State<StoryPage>
     // Background music player
     _bgPlayer = AudioPlayer();
     _bgPlayer.setReleaseMode(ReleaseMode.loop);
-    _bgPlayer.play(AssetSource('assets/sounds/bg_loop.mp3'));
+    _bgPlayer.play(AssetSource('sounds/bg_loop.mp3'));
 
     // controller drives all movements; repeating for performance
     _controller = AnimationController(
@@ -142,7 +139,7 @@ class _StoryPageState extends State<StoryPage>
     if (_found) return; // ignore after win
     if (t.isTrap) {
       // play jump-scare and show a spooky reaction
-      await _sfxPlayer.play(AssetSource('assets/sounds/jumpscare.mp3'));
+      await _sfxPlayer.play(AssetSource('sounds/jumpscare.mp3'));
       // tiny dialog as reaction
       showDialog(
         context: context,
@@ -163,9 +160,11 @@ class _StoryPageState extends State<StoryPage>
       );
     } else if (t.isCorrect) {
       _found = true;
-      await _sfxPlayer.play(AssetSource('assets/sounds/win_sound.mp3'));
+      await _sfxPlayer.play(AssetSource('sounds/win_sound.mp3'));
       // small celebration animation by navigating to WinPage with hero
-      Navigator.of(context).pushReplacementNamed('/win');
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => WinPage()));
     } else {
       // wrong but harmless tap: small shake feedback
       ScaffoldMessenger.of(context).showSnackBar(
@@ -189,7 +188,10 @@ class _StoryPageState extends State<StoryPage>
             icon: Icon(Icons.home),
             onPressed: () {
               _bgPlayer.stop();
-              Navigator.of(context).popUntil((route) => route.isFirst);
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => HomePage()),
+                (route) => false,
+              );
             },
           ),
         ],
